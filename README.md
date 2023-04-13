@@ -16,7 +16,7 @@ Directory with main driver scripts for shifting and intersecting data.
   * `mapping.py` - defines a function `GENERATE_ABSREL_MAPPING`, taking **cell line** 
     as an input and writing dict as string into file: `SHIFT_AUX_FILES/*_crd_map.txt`;
 
-  * `annotTAD.py` - defines a function `INTERSECT_W_TAD`, taking **ChIP_PATH* path to ChIP-Seq peaks file,
+  * `annotTAD.py` - defines a function `INTERSECT_W_TAD`, taking **ChIP_PATH** path to ChIP-Seq peaks file,
     **COMPTS_PATH** path to compartments file (`SHIFT_AUX_FILES/*.compartments.bed`) and outputs ChIP-Seq 
     peaks with A/B-compartments annotation into **OUTPATH** file;
 
