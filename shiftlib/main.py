@@ -7,6 +7,7 @@ import pandas as pd
 from sys import argv
 
 from annotTAD import INTERSECT_W_TAD
+from shift_intersect import SHIFT_THEN_INTERSECT
 
 ChIP_dir = argv[1]
 RIP_dir = argv[2]
@@ -42,7 +43,7 @@ for el in glob.glob(f"{ChIP_dir}/*"):
 
 # DRIVER CODE
 sim_res = []
-for i in range(10_000):
+for i in tqdm(range(10_000)):
   
   # GENERATE SHIFT DICT FOR BOTH ORGANISMS
   random.seed(SEED)
@@ -77,4 +78,6 @@ for i in range(10_000):
     for futr in cf.as_completed(futures):
       triad_cnt = futr.result()
       sim_res.append((i, triad_cnt[0], triad_cnt[1]))
+
+pd.DataFrame(sim_res).to_csv("sim_res.tsv", sep='\t', header=False, index=False)
 

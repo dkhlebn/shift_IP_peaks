@@ -27,12 +27,12 @@ Directory with main driver scripts for shifting and intersecting data.
     for in `main.py`), **CMP_MAP_PATH** path to file of absolute-relative coordinate mapping in 
     A/B-compartments in a given organism;
 
-  * RIPShift.py - defines a function `SHIFT_RNA_Protein`, that shifts RIP-Seq peaks file. Arguments:
+  * `RIPShift.py` - defines a function `SHIFT_RNA_Protein`, that shifts RIP-Seq peaks file. Arguments:
     **PEAKFILE_PATH** path to RIP-Seq peaks file, **OUTFILE_PATH** path to shifted RIP-Seq peaks file, 
     **SHIFT_DICT** mapping from chromosome karyotype to shift size for a given organism (accounted
     for in `main.py`), **CHR_LIST** karyotype for a cell_line;
 
-  * shift_intersect.py - defines a driver function `SHIFT_THEN_INTERSECT`, that shifts (sic!) and 
+  * `shift_intersect.py` - defines a driver function `SHIFT_THEN_INTERSECT`, that shifts (sic!) and 
     intersects RIP- and ChIP-Seq peaks for a given protein in a given cell_line. Arguments:
     **PROT_ORG** tuple (protein, cell_line), **INIT_LOCS** initial locations for RIP- and ChIP-Seq 
     peak files, **OUTDIR** output directory for shifted RIP- and ChIP-Seq files to be put into, 
@@ -40,4 +40,4 @@ Directory with main driver scripts for shifting and intersecting data.
     **CHR_LIST** keryotype for a cell_line, **RD_DATA** path to RNA-DNA interactions file, 
     **AUX_DIR** directory where auxilliary files are situated);
 
-  * main.py
+  * `main.py` - main file, runs simulations. Takes arguments in argv style: **ChIP_DIR**, **RIP_DIR**, **RD_DIR**, **TMP_DIR**.
