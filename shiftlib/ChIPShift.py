@@ -2,8 +2,8 @@ import os
 import math
 import glob
 import random
+import logging
 import pandas as pd
-
 
 def SHIFT_DNA_Protein(PEAKFILE_PATH, OUTFILE_PATH, SHIFTS_DICT, CMP_MAP_PATH):
     '''
@@ -48,8 +48,17 @@ def SHIFT_DNA_Protein(PEAKFILE_PATH, OUTFILE_PATH, SHIFTS_DICT, CMP_MAP_PATH):
         end_shift = rel_crds[init_tad][0] + (end_init - abs_crds[init_tad][0]) + shift
 
         # check if st/end_shift > total relative length (i.e. cycle over chr)
-        start_shift = start_shift - rel_length * (start_shift > rel_length) + rel_length * (start_shift < 0)
-        end_shift = end_shift - rel_length * (end_shift > rel_length) + rel_length * (end_shift < 0)
+        while start_shift > rel_length:
+          start_shift -= rel_length
+        
+        while start_shift < 0:
+          start_shift += rel_length
+
+        while end_shift > rel_length:
+          end_shift -= rel_length
+
+        while end_shift < 0:
+          end_shift += rel_length
 
         # find compartment for *_shift. If newPeak is split between 2, create two peaks
         new_tad_st = lowerBorder(rel_crds, start_shift)
@@ -84,7 +93,7 @@ def SHIFT_DNA_Protein(PEAKFILE_PATH, OUTFILE_PATH, SHIFTS_DICT, CMP_MAP_PATH):
               "pval", "qval", "peak", "tad"]
     coldct = {i : col for i, col in enumerate(columns)}
     peaks = pd.read_csv(f"{PEAKFILE_PATH}", sep='\t', header = None).rename(columns = coldct)
-    
+
     # SHIFT PEAKS
     res_l = []
     for row in peaks.iterrows():
