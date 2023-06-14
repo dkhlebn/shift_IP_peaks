@@ -43,7 +43,7 @@ logging.info("DIRS created, PREREQUISITES defined...")
 
 # GET LIST OF PROTEINS AND ORGANISMS
 PROT_ORG = []
-for el in glob.glob(f"{ChIP_dir}/*"):
+for el in glob.glob(f"{ChIP_dir}/*K562*"):
   fname = el.split('/')[1]
   prot =  fname.split('.')[0]
   org =   fname.split('.')[2]
@@ -87,8 +87,11 @@ for i in range(20):
   time_taken = time.time() - init_time
   logging.info(f"Shifts and intersects done (Time: {time_taken}). Writing!")    
   for futr in cf.as_completed(futures):
-    triad_cnt = futr.result()
-    sim_res.append((i, triad_cnt[0], triad_cnt[1]))
+#    triad_cnt = futr.result() # (de)comment for triad count simulation
+#    sim_res.append((i, triad_cnt[0], triad_cnt[1]))
+     state_cnt = futr.result() # (de)comment for annot simulation
+     sim_res.append(state_cnt)
+     
 
   removal_rip =  f"rm {TMP_dir}/*P_peaks/* -rf"
   remove_sp = sp.Popen(sh.split(removal_rip))
@@ -100,5 +103,9 @@ clean_up_proc = sp.Popen(sh.split(clean_up))
 _, _ = clean_up_proc.communicate()
 
 # SAVE RESULTS
-pd.DataFrame(sim_res).to_csv(f"sim_res_{idx}.tsv", sep='\t', header=False, index=False)
+#pd.DataFrame(sim_res).to_csv(f"sim_res_{idx}.tsv", sep='\t', header=False, index=False) # (de)comment for triad results
+
+with open(f"sim_anot_{idx}.spin", 'w') as fout_handle:
+  for el in sim_res:
+    fout_handle.write('\t'.join(el) + '\n')
 
