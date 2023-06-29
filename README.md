@@ -44,10 +44,10 @@ Directory with main driver scripts for shifting and intersecting data.
 
 # Example usage (as of source article):
 
-``{python}
+```{python}
 python3 shiftlib/mapping.py SHIFT_AUX_FILES;
 python3 shiftlib/annotTAD.py ChIP-Seq_Peaks BG_WORKING DIR;
 python3 shiftlib/calculate_close.py PROT_RNA_LISTS;
 
 python3 shiftlib/main.py
-``
+```
