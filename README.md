@@ -41,3 +41,12 @@ Directory with main driver scripts for shifting and intersecting data.
     **AUX_DIR** directory where auxilliary files are situated);
 
   * `main.py` - main file, runs simulations. Takes arguments in argv style: **ChIP_DIR**, **RIP_DIR**, **RD_DIR**, **TMP_DIR**.
+
+# Example usage (as of source article):
+
+``
+python3 shiftlib/mapping.py SHIFT_AUX_FILES;
+python3 shiftlib/annotTAD.py ChIP-Seq_Peaks BG_WORKING DIR;
+python3 shiftlib/calculate_close.py PROT_RNA_LISTS;
+
+python3 shiftlib/main.py
