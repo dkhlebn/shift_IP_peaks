@@ -28,7 +28,7 @@ K562_path = f"{aux_files_dir}/K562.compartments.bed"
 mESC_path = f"{aux_files_dir}/mESC.compartments.bed"
 
 for el in glob.glob(f"{ChIP_dir}/*"):
-    fname = el.split("/")[1]
+    fname = el.split("/")[-1]
     prot = fname.split(".")[0]
     org = fname.split(".")[2]
     logging.info(f"{prot, org}")
