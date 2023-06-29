@@ -16,8 +16,8 @@ ChIP_dir = sys.argv[1]
 RIP_dir = sys.argv[2]
 RD_dir = sys.argv[3]
 TMP_dir = sys.argv[4]
-ANNOT_FLAG = sys.argv[5]
-FUNCTIONAL = sys.argv[6]
+ANNOT_FLAG = bool(sys.argv[5])
+FUNCTIONAL = bool(sys.argv[6])
 idx = TMP_dir.split("_")[-1]
 
 # SET UP LOGS
@@ -27,7 +27,7 @@ root.setLevel(logging.DEBUG)
 handler = logging.FileHandler(f"LOGS_SHIFT_{idx}.sh.txt")
 handler.setLevel(logging.DEBUG)
 root.addHandler(handler)
-logging.info(f"ARGUMENTS passsed: {*sys.argv}...")
+logging.info(f"ARGUMENTS passsed: {', '.join(sys.argv[1:])}...")
 
 # COMMON DEFS
 aux_files_dir = "/home/dkhlebnikov/TRIADS/SHIFT_AUX_FILES"
@@ -47,12 +47,13 @@ logging.info("DIRS created, PREREQUISITES defined...")
 
 # GET LIST OF PROTEINS AND ORGANISMS
 PROT_ORG = []
-for el in glob.glob(f"{RIP_dir}/*K562*"):
-    fname = el.split("/")[1]
+for el in glob.glob(f"{RIP_dir}/*"):
+    fname = el.split("/")[-1]
     prot = fname.split(".")[0]
     exp = fname.split(".")[1]
     org = fname.split(".")[2]
-    PROT_ORG.append((prot, exp, org))
+    if glob.glob(f"{ChIP_dir}/{prot}.*"):
+        PROT_ORG.append((prot, exp, org))
 
 mESC_RD_exps = [
     "grid_mm10_mESC.bed",
@@ -91,9 +92,9 @@ for i in range(20):
             "ChIP": glob.glob(f"{ChIP_dir}/{prot}.ChIP.{org}.bed")[0],
         }
         out_locs = {"RIP": f"{TMP_dir}/RP_peaks", "ChIP": f"{TMP_dir}/DP_peaks"}
-        rd_exps = mESC_RD_exps if org == "mESC" else K562_RD_exp
+        rd_exps = mESC_RD_exps if org == "mESC" else K562_RD_exps
         rd_paths = [f"{RD_dir}/{exp}" for exp in rd_exps]
-        for rd_path in rd_path:
+        for rd_path in rd_paths:
             exec_arguments.append(
                 (
                     el,

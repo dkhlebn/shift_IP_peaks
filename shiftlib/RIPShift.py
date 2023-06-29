@@ -21,8 +21,9 @@ def _permute_K562(PEAKFILE_PATH, OUTFILE_PATH, FUNC_FLAG):
     Permute RNA-protein peaks to generate background data for triads construction
     in K562 cell line
     """
-    PEAKDIR = PEAKFILE_PATH.split("/")[-2]
+    PEAKDIR = "/".join(PEAKFILE_PATH.split("/")[:-1])
     fname = PEAKFILE_PATH.split("/")[-1]
+    protein = fname.split(".")[0]
     all_proteins = set(
         [
             "LARP7",
@@ -75,9 +76,9 @@ def _permute_K562(PEAKFILE_PATH, OUTFILE_PATH, FUNC_FLAG):
         ]
     )
     if FUNC_FLAG:
-        rel_file = "SHIFT_AUX_FILES/func_proteins.txt"
+        rel_file = "shift_IP_peaks/SHIFT_AUX_FILES/func_proteins.txt"
     else:
-        rel_file = "SHIFT_AUX_FILES/close_proteins.txt"
+        rel_file = "shift_IP_peaks/SHIFT_AUX_FILES/close_proteins.txt"
 
     with open(rel_file, "r") as fn:
         prot_closeness = eval(fn.readline())
@@ -128,9 +129,9 @@ def _permute_mESC(PEAKFILE_PATH, OUTFILE_PATH):
     """
     Same as PERMUTE_RNA_PEAKS_K562 but for mESC, since there are only 4 proteins available
     """
-    PEAKDIR = PEAKFILE_PATH.split("/")[-2]
+    PEAKDIR = "/".join(PEAKFILE_PATH.split("/")[:-1])
     RIP_EXP_TYPE = PEAKFILE_PATH.split("/")[-1].split(".")[1]
-    PROTEIN = PEAKFILE_PATH.split("/")[-1].split(".")[0]
+    PROTEIN_FILE = PEAKFILE_PATH.split("/")[-1]
 
     suz12_unfavorable = "fRIP" if RIP_EXP_TYPE == "eCLIP" else "eCLIP"
 
@@ -144,8 +145,8 @@ def _permute_mESC(PEAKFILE_PATH, OUTFILE_PATH):
 
     dflist = []
     for fname in rel_files:
-        df = pd.read_table(fname, header=None).rename(columns=dt_cols)
-        if fname == PROTEIN:
+        df = pd.read_table(f"{PEAKDIR}/{fname}", header=None).rename(columns=dt_cols)
+        if fname == PROTEIN_FILE:
             protein_peaks = df
         dflist.append(df)
 
