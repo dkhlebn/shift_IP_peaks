@@ -1,3 +1,4 @@
+import sys
 import glob
 import pandas as pd
 
@@ -40,7 +41,7 @@ def CALC_CLOSENESS(RNA_LIST_DIR, threshold=2 / 3):
         ser = df[col]
         thr = ser.quantile(threshold)
         dt_wrt[col] = sorted(ser[ser >= thr].index.to_list())
-    with open("SHIFT_AUX_FILES/close_proteins.txt", "w") as fh:
+    with open("../SHIFT_AUX_FILES/close_proteins.txt", "w") as fh:
         fh.write(str(dt_wrt))
 
     return 0
@@ -122,7 +123,7 @@ def CALC_FUNCTIONAL():
         for lst in [lst for lst in lsts if protein in lst]:
             functionally_close.extend([elem for elem in lst])
         dt[protein] = list(set(functionally_close))
-    with open("SHIFT_AUX_FILES/func_proteins.txt", "w") as fh:
+    with open("../SHIFT_AUX_FILES/func_proteins.txt", "w") as fh:
         fh.write(str(dt))
     return 0
 
