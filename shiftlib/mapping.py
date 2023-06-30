@@ -1,7 +1,4 @@
-import os
-import math
-import glob
-import random
+import sys
 import pandas as pd
 
 
@@ -17,7 +14,7 @@ def GENERATE_ABSREL_MAPPING(ORGANISM, CMPTDIR):
         positions.
         """
         tmp = tad_df.query(f"chr == '{chrom}' and compt == '{cm_type}'")
-        ranges = [(a, b) for a, b in zip(tmp.start, tmp.end)]
+        ranges = list(zip(tmp.start, tmp.end))
         shift = ranges[0][0]
         ranges_new = [(ranges[0][0] - shift, ranges[0][1] - shift)]
         for i, val in enumerate(ranges[1:], 1):

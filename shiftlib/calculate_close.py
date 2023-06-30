@@ -26,10 +26,10 @@ def CALC_CLOSENESS(RNA_LIST_DIR, threshold=2 / 3):
         dt[prot] = read_in(file)
 
     # CALCULATE INTERSECTION SIZES
-    sim_dt = {prot: {} for prot in dt.keys()}
-    for pr1 in dt.keys():
-        for pr2 in dt.keys():
-            common1 = len(dt[pr1].intersection(dt[pr2]))
+    sim_dt = {prot: {} for prot in dt}
+    for pr1, rna_list1 in dt.items():
+        for pr2, rna_list2 in dt.items():
+            common1 = len(rna_list1.intersection(rna_list2))
             sim_dt[pr1][pr2] = common1
     df = pd.DataFrame.from_dict(sim_dt)
     for col in df.columns:
@@ -121,7 +121,7 @@ def CALC_FUNCTIONAL():
     for protein in all_proteins:
         functionally_close = []
         for lst in [lst for lst in lsts if protein in lst]:
-            functionally_close.extend([elem for elem in lst])
+            functionally_close.extend(list(lst))
         dt[protein] = list(set(functionally_close))
     with open("../SHIFT_AUX_FILES/func_proteins.txt", "w") as fh:
         fh.write(str(dt))

@@ -1,8 +1,4 @@
-import os
 import math
-import glob
-import random
-import logging
 import pandas as pd
 
 
@@ -20,7 +16,7 @@ def SHIFT_DNA_Protein(PEAKFILE_PATH, OUTFILE_PATH, SHIFTS_DICT, CMP_MAP_PATH):
             mid = math.floor((low + high) / 2)
             if arr[mid][0] == threshold:
                 return mid
-            elif arr[mid][0] < threshold and mid != low:
+            if arr[mid][0] < threshold and mid != low:
                 low = mid
             elif arr[mid][0] > threshold and mid != high:
                 high = mid
@@ -75,19 +71,18 @@ def SHIFT_DNA_Protein(PEAKFILE_PATH, OUTFILE_PATH, SHIFTS_DICT, CMP_MAP_PATH):
             peak_row[1]["start"] = int(start_new)
             peak_row[1]["end"] = int(end_new)
             return [peak_row[1]]
-        else:
-            peak_fromStart = (0, peak_row[1].copy())
-            peak_fromStart[1]["start"] = int(
-                abs_crds[new_tad_st][0] + (start_shift - rel_crds[new_tad_st][0])
-            )
-            peak_fromStart[1]["end"] = int(abs_crds[new_tad_st][1])
+        peak_fromStart = (0, peak_row[1].copy())
+        peak_fromStart[1]["start"] = int(
+            abs_crds[new_tad_st][0] + (start_shift - rel_crds[new_tad_st][0])
+        )
+        peak_fromStart[1]["end"] = int(abs_crds[new_tad_st][1])
 
-            peak_fromEnd = (0, peak_row[1].copy())
-            peak_fromEnd[1]["start"] = int(abs_crds[new_tad_en][0])
-            peak_fromEnd[1]["end"] = int(
-                abs_crds[new_tad_en][0] + (end_shift - rel_crds[new_tad_en][0])
-            )
-            return [peak_fromStart[1], peak_fromEnd[1]]
+        peak_fromEnd = (0, peak_row[1].copy())
+        peak_fromEnd[1]["start"] = int(abs_crds[new_tad_en][0])
+        peak_fromEnd[1]["end"] = int(
+            abs_crds[new_tad_en][0] + (end_shift - rel_crds[new_tad_en][0])
+        )
+        return [peak_fromStart[1], peak_fromEnd[1]]
 
     # LOAD TAD ABS/REL MAPPING
     chr2cmp2crds = ""
@@ -110,10 +105,11 @@ def SHIFT_DNA_Protein(PEAKFILE_PATH, OUTFILE_PATH, SHIFTS_DICT, CMP_MAP_PATH):
         "peak",
         "tad",
     ]
-    coldct = {i: col for i, col in enumerate(columns)}
+    coldct = dict(enumerate(columns))
     peaks = pd.read_csv(f"{PEAKFILE_PATH}", sep="\t", header=None).rename(
         columns=coldct
     )
+    fname = PEAKFILE_PATH.split('/')[-1]
 
     # SHIFT PEAKS
     res_l = []
@@ -123,6 +119,6 @@ def SHIFT_DNA_Protein(PEAKFILE_PATH, OUTFILE_PATH, SHIFTS_DICT, CMP_MAP_PATH):
             res_l.append(el)
 
     pd.DataFrame.from_records(res_l).to_csv(
-        f"{OUTFILE_PATH}", header=False, index=False, sep="\t"
+        f"{OUTFILE_PATH}/{fname}", header=False, index=False, sep="\t"
     )
     return 0

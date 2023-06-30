@@ -4,9 +4,9 @@ import time
 import random
 import logging
 import shlex as sh
-import pandas as pd
 import subprocess as sp
 import concurrent.futures as cf
+import pandas as pd
 
 from shift_intersect import SHIFT_THEN_INTERSECT
 
@@ -18,7 +18,7 @@ RD_dir = sys.argv[3]
 TMP_dir = sys.argv[4]
 ANNOT_FLAG = bool(sys.argv[5])
 FUNCTIONAL = bool(sys.argv[6])
-idx = TMP_dir.split("_")[-1]
+idx = TMP_dir.rsplit('_', maxsplit=1)[-1]
 
 # SET UP LOGS
 
@@ -30,7 +30,7 @@ root.addHandler(handler)
 logging.info(f"ARGUMENTS passsed: {', '.join(sys.argv[1:])}...")
 
 # COMMON DEFS
-aux_files_dir = "/home/dkhlebnikov/TRIADS/SHIFT_AUX_FILES"
+aux_files_dir = f"shift_IP_peaks/SHIFT_AUX_FILES"
 chr_org = {
     "K562": ["chr" + str(val) for val in [*range(1, 23), "X", "Y"]],
     "mESC": ["chr" + str(val) for val in [*range(1, 20), "X", "Y"]],
@@ -94,20 +94,18 @@ for i in range(20):
         out_locs = {"RIP": f"{TMP_dir}/RP_peaks", "ChIP": f"{TMP_dir}/DP_peaks"}
         rd_exps = mESC_RD_exps if org == "mESC" else K562_RD_exps
         rd_paths = [f"{RD_dir}/{exp}" for exp in rd_exps]
-        for rd_path in rd_paths:
-            exec_arguments.append(
-                (
-                    el,
-                    init_locs,
-                    out_locs,
-                    shifts[org],
-                    chr_org[org],
-                    rd_path,
-                    aux_files_dir,
-                    ANNOT_FLAG,
-                    FUNCTIONAL,
-                )
+        exec_arguments.append(
+            (
+                el,
+                init_locs,
+                out_locs,
+                shifts[org],
+                rd_paths,
+                aux_files_dir,
+                ANNOT_FLAG,
+                FUNCTIONAL,
             )
+        )
 
     # SHIFT PEAKS AND INTERSECT
     with cf.ProcessPoolExecutor(max_workers=72) as executor:
@@ -118,12 +116,9 @@ for i in range(20):
     time_taken = time.time() - init_time
     logging.info(f"Shifts and intersects done (Time: {time_taken}). Writing!")
     for futr in cf.as_completed(futures):
-        if ANNOT_FLAG:
-            state_cnt = futr.result()
-            sim_res.append((i, state_cnt[0], state_cnt[1]))
-        else:
-            triad_cnt = futr.result()
-            sim_res.append((i, triad_cnt[0], triad_cnt[1]))
+        res_list = futr.result()
+        for el in res_list:
+            sim_res.append((i, *el))
 
     # CLEAN TMP DIRS
     removal_rip = f"rm {TMP_dir}/*P_peaks/* {TMP_dir}/SIM_TRIADS/* -rf"
@@ -136,11 +131,6 @@ clean_up_proc = sp.Popen(sh.split(clean_up))
 _, _ = clean_up_proc.communicate()
 
 # SAVE RESULTS
-if ANNOT_FLAG:
-    with open(f"sim_annot_{idx}.tsv", "w") as fout_handle:
-        for el in sim_res:
-            fout_handle.write("\t".join(el) + "\n")
-else:
-    pd.DataFrame(sim_res).to_csv(
-        f"sim_cnt_{idx}.tsv", sep="\t", header=False, index=False
-    )
+with open(f"sim_annot_{idx}.tsv", "w") as fout_handle:
+    for el in sim_res:
+        fout_handle.write("\t".join(el) + "\n")

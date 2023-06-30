@@ -1,8 +1,5 @@
 import os
-import math
 import glob
-import random
-import logging
 import pandas as pd
 
 
@@ -12,8 +9,7 @@ def PERMUTE_RNA_Protein(PEAKFILE_PATH, OUTFILE_PATH, ORGANISM, FUNC_FLAG):
     """
     if ORGANISM == "K562":
         return _permute_K562(PEAKFILE_PATH, OUTFILE_PATH, FUNC_FLAG)
-    elif ORGANISM == "mESC":
-        return _permute_mESC(PEAKFILE_PATH, OUTFILE_PATH)
+    return _permute_mESC(PEAKFILE_PATH, OUTFILE_PATH)
 
 
 def _permute_K562(PEAKFILE_PATH, OUTFILE_PATH, FUNC_FLAG):
@@ -22,8 +18,8 @@ def _permute_K562(PEAKFILE_PATH, OUTFILE_PATH, FUNC_FLAG):
     in K562 cell line
     """
     PEAKDIR = "/".join(PEAKFILE_PATH.split("/")[:-1])
-    fname = PEAKFILE_PATH.split("/")[-1]
-    protein = fname.split(".")[0]
+    prot_fname = PEAKFILE_PATH.split("/")[-1]
+    protein = prot_fname.split(".")[0]
     all_proteins = set(
         [
             "LARP7",
@@ -86,7 +82,7 @@ def _permute_K562(PEAKFILE_PATH, OUTFILE_PATH, FUNC_FLAG):
     # construct related and unrelated peak datasets
     rellist, unrlist = [], []
     cols = ["chr", "start", "end", "strand", "rna_type", "name", "pval", "qval"]
-    dt_cols = {k: v for k, v in enumerate(cols)}
+    dt_cols = dict(enumerate(cols))
     for relprot in prot_closeness[protein]:
         fname = glob.glob(f"{PEAKDIR}/{relprot}*K562*")[0]
         df = pd.read_table(fname, header=None).rename(columns=dt_cols)
@@ -121,7 +117,7 @@ def _permute_K562(PEAKFILE_PATH, OUTFILE_PATH, FUNC_FLAG):
         .sort_values(by=["chr", "start", "end"])
         .iloc[:, [0, 1, 2, 3, 4, 6, 7]]
     )
-    sim_peaks.to_csv(f"{OUTFILE_PATH}/{fname}", index=False, header=False, sep="\t")
+    sim_peaks.to_csv(f"./{OUTFILE_PATH}/{prot_fname}", index=False, header=False, sep="\t")
     return 0
 
 
@@ -141,7 +137,7 @@ def _permute_mESC(PEAKFILE_PATH, OUTFILE_PATH):
     ]
 
     cols = ["chr", "start", "end", "strand", "rna_type", "name", "pval", "qval"]
-    dt_cols = {k: v for k, v in enumerate(cols)}
+    dt_cols = dict(enumerate(cols))
 
     dflist = []
     for fname in rel_files:
@@ -165,5 +161,5 @@ def _permute_mESC(PEAKFILE_PATH, OUTFILE_PATH):
         .sort_values(by=["chr", "start", "end"])
         .iloc[:, [0, 1, 2, 3, 4, 6, 7]]
     )
-    sim_peaks.to_csv(f"{OUTFILE_PATH}/{fname}", index=False, header=False, sep="\t")
+    sim_peaks.to_csv(f"./{OUTFILE_PATH}/{PROTEIN_FILE}", index=False, header=False, sep="\t")
     return 0
