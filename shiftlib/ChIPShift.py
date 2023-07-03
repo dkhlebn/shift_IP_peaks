@@ -118,7 +118,10 @@ def SHIFT_DNA_Protein(PEAKFILE_PATH, OUTFILE_PATH, SHIFTS_DICT, CMP_MAP_PATH):
         for el in shifted:
             res_l.append(el)
 
-    pd.DataFrame.from_records(res_l).to_csv(
-        f"{OUTFILE_PATH}/{fname}", header=False, index=False, sep="\t"
-    )
+    (
+        pd.DataFrame.from_records(res_l)
+        .sort_values(by=["chr", "start", "end"])
+        .iloc[:, :-1]
+        .to_csv(f"{OUTFILE_PATH}/{fname}", header=False, index=False, sep="\t")
+     )
     return 0
