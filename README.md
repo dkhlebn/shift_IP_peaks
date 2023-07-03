@@ -43,11 +43,12 @@ Directory with main driver scripts for shifting and intersecting data.
   * `main.py` - main file, runs simulations. Takes arguments in argv style: **ChIP_DIR**, **RIP_DIR**, **RD_DIR**, **TMP_DIR**.
 
 # Example usage (as of source article):
-
+You could notice the number of iterations in main script is set to 20. This is intentional since 
+the script was run on 50 instances simultaneously to obtain results faster.
 ```{python}
 python3 shiftlib/mapping.py SHIFT_AUX_FILES;
 python3 shiftlib/annotTAD.py ChIP-Seq_Peaks BG_WORKING DIR;
 python3 shiftlib/calculate_close.py PROT_RNA_LISTS;
 
-python3 shiftlib/main.py
+python3 shiftlib/main.py ChIP_w_cmpts/WINDOW_0 RIP_DATA/annot_WINDOW_0 RNA_DNA_DATA SHIFT_WORKING_DIR_1 1 0
 ```
