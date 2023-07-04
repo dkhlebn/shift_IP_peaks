@@ -105,23 +105,23 @@ Main file, runs simulations. Takes arguments in argv style: **ChIP_DIR**, **RIP_
 
 Examples of some files are provided in SHIFT_AUX_FILES directory. Others are:
 ## 1. Un-annotated ChIP-Seq files:
-chrN|start|end|name|score|strand|something|pvalue|qvalue|something
-------------------------------------------------------------------
-chr1|42959695|42960055|.|538|.|12.12817|-1.00000|0.47207|180
-chr1|22026852|22027212|.|597|.|12.15709|-1.00000|0.47387|180
+|chrN|start|end|name|score|strand|something|pvalue|qvalue|something|
+|----|-----|---|----|-----|------|---------|------|------|---------|
+|chr1|42959695|42960055|.|538|.|12.12817|-1.00000|0.47207|180|
+|chr1|22026852|22027212|.|597|.|12.15709|-1.00000|0.47387|180|
 ## 2. Annotated ChIP-Seq files:
 ```
-chrN|start|end|name|score|strand|something|pvalue|qvalue|something|cmpt
------------------------------------------------------------------------
-chr1|42959695|42960055|.|538|.|12.12817|-1.00000|0.47207|180|A
-chr1|22026852|22027212|.|597|.|12.15709|-1.00000|0.47387|180|A
+|chrN|start|end|name|score|strand|something|pvalue|qvalue|something|cmpt|
+|----|-----|---|----|-----|------|---------|------|------|---------|----|
+|chr1|42959695|42960055|.|538|.|12.12817|-1.00000|0.47207|180|A|
+|chr1|22026852|22027212|.|597|.|12.15709|-1.00000|0.47387|180|A|
 ```
 ## 3. RNA-protein peaks files:
 ```
-chrN|start|end|strand|gene_type|gene_name|pvalue|qvalue
--------------------------------------------------------
-chr10|992400|992700|+|protein_coding|GTPBP4|0.00247773|0.0034409135027472526
-chr10|995700|996300|+|protein_coding|GTPBP4|0.00421554|0.005076761488981537
+|chrN|start|end|strand|gene_type|gene_name|pvalue|qvalue|
+|----|-----|---|------|---------|---------|------|------|
+|chr10|992400|992700|+|protein_coding|GTPBP4|0.00247773|0.0034409135027472526|
+|chr10|995700|996300|+|protein_coding|GTPBP4|0.00421554|0.005076761488981537|
 ```
 ## 4. RNA list file:
 ```
