@@ -109,7 +109,7 @@ def SHIFT_DNA_Protein(PEAKFILE_PATH, OUTFILE_PATH, SHIFTS_DICT, CMP_MAP_PATH):
     peaks = pd.read_csv(f"{PEAKFILE_PATH}", sep="\t", header=None).rename(
         columns=coldct
     )
-    fname = PEAKFILE_PATH.split('/')[-1]
+    fname = PEAKFILE_PATH.split("/")[-1]
 
     # SHIFT PEAKS
     res_l = []
@@ -123,5 +123,5 @@ def SHIFT_DNA_Protein(PEAKFILE_PATH, OUTFILE_PATH, SHIFTS_DICT, CMP_MAP_PATH):
         .sort_values(by=["chr", "start", "end"])
         .iloc[:, :-1]
         .to_csv(f"{OUTFILE_PATH}/{fname}", header=False, index=False, sep="\t")
-     )
+    )
     return 0

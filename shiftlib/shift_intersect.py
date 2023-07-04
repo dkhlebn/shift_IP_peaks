@@ -39,7 +39,7 @@ def SHIFT_THEN_INTERSECT(
         SHIFTS_DICT,
         chip_TADmap,
     )
-
+    logging.info("Shifted DNA-Protein peaks, permuted RNA-protein peaks")
     results = []
     for RD_experiment in RD_DATA:
         # CONSTRUCT SIMULATED TRIADS AND ASSESS QUANTITY

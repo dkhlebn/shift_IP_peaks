@@ -117,7 +117,9 @@ def _permute_K562(PEAKFILE_PATH, OUTFILE_PATH, FUNC_FLAG):
         .sort_values(by=["chr", "start", "end"])
         .iloc[:, [0, 1, 2, 3, 6, 7]]
     )
-    sim_peaks.to_csv(f"./{OUTFILE_PATH}/{prot_fname}", index=False, header=False, sep="\t")
+    sim_peaks.to_csv(
+        f"{OUTFILE_PATH}/{prot_fname}", index=False, header=False, sep="\t"
+    )
     return 0
 
 
@@ -161,5 +163,7 @@ def _permute_mESC(PEAKFILE_PATH, OUTFILE_PATH):
         .sort_values(by=["chr", "start", "end"])
         .iloc[:, [0, 1, 2, 3, 6, 7]]
     )
-    sim_peaks.to_csv(f"./{OUTFILE_PATH}/{PROTEIN_FILE}", index=False, header=False, sep="\t")
+    sim_peaks.to_csv(
+        f"{OUTFILE_PATH}/{PROTEIN_FILE}", index=False, header=False, sep="\t"
+    )
     return 0

@@ -18,7 +18,7 @@ RD_dir = sys.argv[3]
 TMP_dir = sys.argv[4]
 ANNOT_FLAG = bool(sys.argv[5])
 FUNCTIONAL = bool(sys.argv[6])
-idx = TMP_dir.rsplit('_', maxsplit=1)[-1]
+idx = TMP_dir.rsplit("_", maxsplit=1)[-1]
 
 # SET UP LOGS
 
@@ -64,7 +64,7 @@ K562_RD_exps = ["redc_hg38_K562.bed"]
 
 # DRIVER CODE
 sim_res = []
-for i in range(20):
+for i in range(1):
     logging.info(
         f"GENERATION OF BG DATA started {i+1}-th time. Shifting, Permuting & Intersecting..."
     )
@@ -108,17 +108,16 @@ for i in range(20):
         )
 
     # SHIFT PEAKS AND INTERSECT
-    with cf.ProcessPoolExecutor(max_workers=72) as executor:
+    with cf.ProcessPoolExecutor(max_workers=len(exec_arguments)) as executor:
         futures = {
             executor.submit(SHIFT_THEN_INTERSECT, *argts) for argts in exec_arguments
         }
-
     time_taken = time.time() - init_time
     logging.info(f"Shifts and intersects done (Time: {time_taken}). Writing!")
     for futr in cf.as_completed(futures):
         res_list = futr.result()
         for el in res_list:
-            sim_res.append((i, *el))
+            sim_res.append((str(i), *el))
 
     # CLEAN TMP DIRS
     removal_rip = f"rm {TMP_dir}/*P_peaks/* {TMP_dir}/SIM_TRIADS/* -rf"
@@ -126,9 +125,9 @@ for i in range(20):
     _, _ = remove_sp.communicate()
 
 # CLEAN UP
-clean_up = f"rm {TMP_dir} -rf"
-clean_up_proc = sp.Popen(sh.split(clean_up))
-_, _ = clean_up_proc.communicate()
+ clean_up = f"rm {TMP_dir} -rf"
+ clean_up_proc = sp.Popen(sh.split(clean_up))
+ _, _ = clean_up_proc.communicate()
 
 # SAVE RESULTS
 with open(f"sim_annot_{idx}.tsv", "w") as fout_handle:
