@@ -105,24 +105,25 @@ Main file, runs simulations. Takes arguments in argv style: **ChIP_DIR**, **RIP_
 
 Examples of some files are provided in SHIFT_AUX_FILES directory. Others are:
 ## 1. Un-annotated ChIP-Seq files:
+
 |chrN|start|end|name|score|strand|something|pvalue|qvalue|something|
 |----|-----|---|----|-----|------|---------|------|------|---------|
 |chr1|42959695|42960055|.|538|.|12.12817|-1.00000|0.47207|180|
 |chr1|22026852|22027212|.|597|.|12.15709|-1.00000|0.47387|180|
+
 ## 2. Annotated ChIP-Seq files:
-```
+
 |chrN|start|end|name|score|strand|something|pvalue|qvalue|something|cmpt|
 |----|-----|---|----|-----|------|---------|------|------|---------|----|
 |chr1|42959695|42960055|.|538|.|12.12817|-1.00000|0.47207|180|A|
 |chr1|22026852|22027212|.|597|.|12.15709|-1.00000|0.47387|180|A|
-```
+
 ## 3. RNA-protein peaks files:
-```
+
 |chrN|start|end|strand|gene_type|gene_name|pvalue|qvalue|
 |----|-----|---|------|---------|---------|------|------|
 |chr10|992400|992700|+|protein_coding|GTPBP4|0.00247773|0.0034409135027472526|
 |chr10|995700|996300|+|protein_coding|GTPBP4|0.00421554|0.005076761488981537|
-```
 ## 4. RNA list file:
 ```
 1016_H1-Esc
@@ -133,16 +134,14 @@ Examples of some files are provided in SHIFT_AUX_FILES directory. Others are:
 ...
 ```
 ## 5. RNA-DNA contacts
-```
-dna_chr	dna_start	dna_end		rna_chr	rna_start	rna_end		gene_type	gene_name	scaling_value	pvalue	qvalue
-chr10	53865689	53865713	chr1	167256826	167256851	-	POU2F1	protein_coding	1.09306870787035	0.13471874050772295	0.2448020706262164
-chr10	64710524	64710548	chr1	145993344	145993388	+	TXNIP	protein_coding	0.901432832277764	0.03145473554779507	0.20506626292109298
-
-```
+|dna_chr|dna_start|dna_end|rna_chr|rna_start|rna_end|gene_type|gene_name|scaling_value|pvalue|qvalue|
+|-------|---------|-------|-------|---------|-------|---------|---------|-------------|------|------|
+|chr10|53865689|53865713|chr1|167256826|167256851|-|POU2F1|protein_coding|1.09306870787035|0.13471874050772295|0.2448020706262164
+|chr10|64710524|64710548|chr1|145993344|145993388|+|TXNIP|protein_coding|0.901432832277764|0.03145473554779507|0.20506626292109298
 
 # Example usage (as of source article):
-  You could notice the number of iterations in main script is set to 20. This is intentional since 
-  the script was run on 50 instances simultaneously to obtain results faster.
+You could notice the number of iterations in main script is set to 20. This is intentional since 
+the script was run on 50 instances simultaneously to obtain results faster.
 ```{python}
 # generate A/B compartment mapping
 python3 shiftlib/mapping.py SHIFT_AUX_FILES;
@@ -153,4 +152,34 @@ python3 shiftlib/calculate_close.py PROT_RNA_LISTS;
 
 #run the simulation
 python3 shiftlib/main.py ChIP_w_cmpts/WINDOW_0 RIP_DATA/annot_WINDOW_0 RNA_DNA_DATA SHIFT_WORKING_DIR_1 1 0
+```
+
+## Directory structure:
+```
+.                                                                                                                                                                                        
+├── 13_run_simulation.sh
+├── ChIP_w_cmpts
+│   ├── WINDOW_0
+│   │   ├── CBP.ChIP.K562.bed
+│   │   ├── CBX3.ChIP.K562.bed
+│   │   ├── CHD1.ChIP.K562.bed
+│   │   └── ...
+├── RIP_DATA
+│   ├── annot_WINDOW_0
+│   │   ├── ADAR.fRIP.K562.bed
+│   │   ├── CBP.fRIP.K562.bed
+│   │   ├── CBX3.fRIP.K562.bed
+│   │   ├── CHD1.fRIP.K562.bed
+│   │   └── ...
+├── RNA_DNA_DATA
+│   ├── grid_mm10_mESC.bed
+│   ├── radicl2FA_mm10_mESC.bed
+│   ├── radiclNPM_mm10_mESC.bed
+│   └── redc_hg38_K562.bed
+└── shift_IP_peaks
+    ├── README.md
+    ├── SHIFT_AUX_FILES
+    │   └── ...
+    └── shiftlib
+        └── ...
 ```
