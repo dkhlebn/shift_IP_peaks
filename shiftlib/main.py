@@ -125,9 +125,9 @@ for i in range(1):
     _, _ = remove_sp.communicate()
 
 # CLEAN UP
- clean_up = f"rm {TMP_dir} -rf"
- clean_up_proc = sp.Popen(sh.split(clean_up))
- _, _ = clean_up_proc.communicate()
+clean_up = f"rm {TMP_dir} -rf"
+clean_up_proc = sp.Popen(sh.split(clean_up))
+_, _ = clean_up_proc.communicate()
 
 # SAVE RESULTS
 with open(f"sim_annot_{idx}.tsv", "w") as fout_handle:
